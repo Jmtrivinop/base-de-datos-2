@@ -4,7 +4,7 @@ const express = require('express')
 const cors = require('cors')
 
 
-const { bdmysql } = require('../database/MariaDbConnection');
+const { bdmysql } = require('../database/MariadbConnection');
 
 
 class Server {
@@ -15,7 +15,7 @@ class Server {
 
         this.pathsMySql = {
             auth: '/api/auth',
-            prueba: '/api/prueba',
+            prueba: '/api/personas',
         }
 
 

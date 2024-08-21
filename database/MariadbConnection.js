@@ -1,7 +1,7 @@
 const {Sequelize} = require('sequelize')
 
 const bdmysql = new Sequelize(
-    'mysql',
+    'mydb',
     'root',
     '',
     {

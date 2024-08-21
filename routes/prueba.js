@@ -1,7 +1,9 @@
 const { Router } = require('express');
 
 
-const { pruebaGet,
+const { personasGet,
+    personaByIdGet,
+    personasComoGet,
     //pruebaPost,
     //pruebaPut,
     //pruebaDelete,
@@ -14,9 +16,12 @@ const { pruebaGet,
 const router = Router();
 
 
-router.get('/', pruebaGet);
+router.get('/', personasGet
+);
 
+router.get('/:id',personaByIdGet);
 
+router.get('/como/:termino',personasComoGet)
 //router.post('/', usuariosPost);
 
 
