@@ -98,7 +98,54 @@ const personasComoGet = async(req = request, res = response) => {
             err: error
         });
     }
+    
+}
+const personasByTipoDocumentoGet = async (req = request, res = response) => {
+    const { Tipo_documento } = req.params;
+
+    try {
+        const personas = await Persona.findAll({
+            where: {
+                Tipo_documento: Tipo_documento
+            }
+        });
+
+        res.json({
+            ok: true,
+            data: personas
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el Administrador',
+            err: error
+        });
+    }
+};
+const personasByInitialGet = async (req = request, res = response) => {
+    const { initial } = req.params;
+
+    try {
+        const personas = await Persona.findAll();
+
+        const personasByInitial = personas.filter(persona => {
+            return persona.nombre.startsWith(initial.toUpperCase());
+        });
+
+        res.json({
+            ok: true,
+            data: personasByInitial
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el Administrador',
+            err: error
+        });
+    }
 }
 module.exports = {
-    personasGet, personaByIdGet, personasComoGet
+    personasGet, personaByIdGet, personasComoGet, personasByTipoDocumentoGet,personasByInitialGet
 }
