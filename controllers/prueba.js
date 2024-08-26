@@ -43,7 +43,7 @@ const personasGet = async (req, res = response) => {
     }
 
 
-}
+};
 
 
 const personaByIdGet = async( req = request, res = response) => {
@@ -70,7 +70,7 @@ const personaByIdGet = async( req = request, res = response) => {
         })
 
     }
-}
+};
 
 const personasComoGet = async(req = request, res = response) => {
 
@@ -78,13 +78,23 @@ const personasComoGet = async(req = request, res = response) => {
     const { termino } = req.params;
 
 
+    console.log("TERMINO",termino)
+
+
     try {
-        const [results] = await bdmysql.query(
-            "SELECT *" +
-            " FROM persona" +
-            " WHERE nombre LIKE '%" + termino + "%'" +
-            " OR apellido LIKE '%" + termino + "%'" +
-            " ORDER BY nombre"
+
+
+        const results = await bdmysql.query(
+            "SELECT * FROM persona WHERE nombre LIKE :searchTerm OR apellido LIKE :searchTerm ORDER BY nombre",
+            {
+                replacements: { searchTerm: `%${termino}%` },
+                type: bdmysql.QueryTypes.SELECT
+            }
+
+
+
+
+           
         );
 
 
@@ -98,8 +108,9 @@ const personasComoGet = async(req = request, res = response) => {
             err: error
         });
     }
-    
-}
+};
+
+
 const personasByTipoDocumentoGet = async (req = request, res = response) => {
     const { Tipo_documento } = req.params;
 
@@ -145,7 +156,81 @@ const personasByInitialGet = async (req = request, res = response) => {
             err: error
         });
     }
+};
+const personasPost = async (req, res = response) => {
+
+	const {nombre, apellido, fecha_nacimiento , Tipo_documento,'Numero Documento': Numero_Documento} = req.body;
+
+    const datos = req.body;
+	const persona = new Persona({ nombre, apellido, fecha_nacimiento , Tipo_documento, Numero_Documento });
+
+	try {
+
+        const newPersona = await Persona.create(datos);
+
+
+
+
+    	res.json({ok:true,
+        	data:newPersona
+    	});
+
+	} catch (error) {
+    	console.log(error);
+    	res.status(500).json({ok:false,
+        	msg: 'Hable con el Administrador',
+        	err: error
+    	})
+
+	}
+
+};
+const PersonasDelete = async (req, res = response) => {
+	const { id } = req.params;
+   //const { _id, password, google, correo, ...resto } = req.body;
+
+	//const uid = req.uid;
+
+	console.log(id);
+ 
+	
+
+	try {
+
+    	const persona = await Persona.findByPk(id);
+    	//const usuarioAutenticado = req.usuario;
+
+    	if (!persona) {
+        	return res.status(404).json({ok:false,
+            	msg: 'No existe una persona con el id: ' + id
+        	})
+    	}
+
+    	//Borrado Logico.
+    	//await heroe.update({estado:false});
+
+    	//Borrado de la BD
+    	await persona.destroy();
+
+    	res.json({ok:true,
+        	persona:persona,
+        	//autenticado:usuarioAutenticado
+    	});
+    
+
+	} catch (error) {
+    	console.log(error);
+    	res.status(500).json({ok:false,
+        	msg: 'Hable con el Administrador',
+        	err: error
+    	})
+
+	}
+
 }
+
+
 module.exports = {
-    personasGet, personaByIdGet, personasComoGet, personasByTipoDocumentoGet,personasByInitialGet
+    personasGet, personaByIdGet, personasComoGet, personasByTipoDocumentoGet, personasByInitialGet,
+    personasPost
 }
