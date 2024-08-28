@@ -7,7 +7,8 @@ const { personasGet,
     personasByTipoDocumentoGet,
     personasByInitialGet,
     personasPost,
-    PersonasDelete
+    PersonasDelete,
+    updatePersona
 
     //pruebaPost,
     //pruebaPut,
@@ -21,8 +22,7 @@ const { personasGet,
 const router = Router();
 
 
-router.get('/', personasGet
-);
+router.get('/', personasGet);
 
 router.get('/:id',personaByIdGet);
 
@@ -32,6 +32,8 @@ router.get('/con/:Tipo_documento',personasByTipoDocumentoGet)
 router.get('/empieza/:initial',personasByInitialGet)
 router.post('/', personasPost)
 router.delete('/:id', PersonasDelete)
+router.put('/:id', updatePersona)
+
 //router.put('/:id', usuariosPut);
 
 

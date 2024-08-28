@@ -229,8 +229,46 @@ const PersonasDelete = async (req, res = response) => {
 
 }
 
+const updatePersona = async (req, res = response) => {
+    const { id } = req.params; 
+    const { nombre } = req.body; 
+
+    try {
+      
+        const persona = await Persona.findByPk(id);
+
+      
+        if (!persona) {
+            return res.status(404).json({
+                ok: false,
+                msg: `No existe una persona con el id: ${id}`
+            });
+        }
+
+        if (nombre) {
+            persona.nombre = nombre;
+        }
+
+       
+        await persona.save();
+
+      
+        res.json({
+            ok: true,
+            data: persona
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el Administrador',
+            err: error
+        });
+    }
+};
 
 module.exports = {
     personasGet, personaByIdGet, personasComoGet, personasByTipoDocumentoGet, personasByInitialGet,
-    personasPost
+    personasPost, PersonasDelete, updatePersona
 }

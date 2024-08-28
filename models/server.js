@@ -16,6 +16,7 @@ class Server {
         this.pathsMySql = {
             auth: '/api/auth',
             prueba: '/api/personas',
+            usuario: '/api/user',
         }
 
 
@@ -60,6 +61,7 @@ class Server {
     routes() {
         //this.app.use(this.pathsMySql.auth, require('../routes/MySqlAuth'));
         this.app.use(this.pathsMySql.prueba, require('../routes/prueba'));
+        this.app.use(this.pathsMySql.usuario, require('../routes/user'));
 
 
     }
