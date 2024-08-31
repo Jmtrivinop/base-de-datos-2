@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { bdmysql } = require('../database/MariadbConnection');
-const { Persona } = require('../models/Persona');
-
+const { Persona } = require('./Persona');  // Ensure correct path to Persona model
 
 const User = bdmysql.define('User', {
     id_usuario: {
@@ -25,16 +24,14 @@ const User = bdmysql.define('User', {
         references: {
             model: Persona,
             key: 'id_persona' 
-        },
+        }
     }
-   
-}, 
-{
-   
+}, {
     freezeTableName: true,
-
-  
     timestamps: false
 });
+
+User.belongsTo(Persona, { foreignKey: 'id_persona', as: 'Persona' });
+Persona.hasMany(User, { foreignKey: 'id_persona', as: 'Usuarios' });
 
 module.exports = { User };

@@ -7,17 +7,18 @@
     "start": "nodemon app.js",
     "iniciar": "node app.js"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mariadb": "^3.3.1",
     "nodemon": "^3.1.4",
     "sequelize": "^6.37.3"
+    
   }
 }

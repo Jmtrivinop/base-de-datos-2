@@ -8,7 +8,7 @@ const Persona = bdmysql.define('Persona', {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true // Asegúrate de que el campo sea auto-incremental
+        autoIncrement: true 
     },
     nombre: {
         type: DataTypes.STRING(45),
@@ -31,11 +31,12 @@ const Persona = bdmysql.define('Persona', {
         allowNull: false
     }
 }, {
-    // Mantener el nombre de la tabla sin pluralización
     freezeTableName: true,
 
-    // Desactivar createdAt y updatedAt
     timestamps: false
-});
+
+    
+},
+);
 
 module.exports = { Persona };

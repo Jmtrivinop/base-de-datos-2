@@ -1,7 +1,11 @@
 const {response, request} = require('express')
+const bcryptjs = require('bcryptjs');
+
 const { Op } = require('sequelize');
 const { User } = require('../models/Usuario');
+const { Persona } = require('../models/Persona');
 const { bdmysql } = require('../database/MariadbConnection');
+
 
 const usuarioGet = async (req, res = response) => {
 
@@ -48,15 +52,16 @@ const obtenerPersona = async (req = request, res = response) => {
     const { id } = req.params;
 
     try {
-        // Encuentra el usuario por ID y carga la persona asociada
+        
         const usuario = await User.findByPk(id, {
             include: {
                 model: Persona,
-                as: 'persona' // Debe coincidir con el alias definido en el modelo User
+                as: 'Persona' 
             }
         });
 
-        // Si el usuario no existe, responde con un error 404
+        console.log('Usuario:', usuario);
+
         if (!usuario) {
             return res.status(404).json({
                 ok: false,
@@ -64,10 +69,10 @@ const obtenerPersona = async (req = request, res = response) => {
             });
         }
 
-        // Devuelve la persona asociada
+      
         res.json({
             ok: true,
-            data: usuario.persona // `persona` es el alias usado en el modelo
+            data: usuario.Persona 
         });
 
     } catch (error) {
@@ -79,6 +84,122 @@ const obtenerPersona = async (req = request, res = response) => {
         });
     }
 };
+
+const usuarioPost = async (req, res = response) => {
+    console.log(bcryptjs);
+	const {email, password, id_persona} = req.body;
+    const salt = bcryptjs.genSaltSync();
+    const new_password =  bcryptjs.hashSync(password, salt);
+
+    
+
+	try {
+
+        const newUsuario = await User.create({
+            email,
+            password: new_password, 
+            id_persona
+        });
+
+
+
+
+    	res.json({ok:true,
+        	data:newUsuario
+    	});
+
+	} catch (error) {
+    	console.log(error);
+    	res.status(500).json({ok:false,
+        	msg: 'Hable con el Administrador',
+        	err: error
+    	})
+
+	}
+
+};
+
+const usuarioDelete = async (req, res = response) => {
+	const { id } = req.params;
+
+
+	console.log(id);
+ 
+	
+
+	try {
+
+    	const usuario = await User.findByPk(id);
+  
+
+    	if (!usuario) {
+        	return res.status(404).json({ok:false,
+            	msg: 'No existe una persona con el id: ' + id
+        	})
+    	}
+
+    
+
+  
+    	await usuario.destroy();
+
+    	res.json({ok:true,
+        	persona:usuario,
+        	
+    	});
+    
+
+	} catch (error) {
+    	console.log(error);
+    	res.status(500).json({ok:false,
+        	msg: 'Hable con el Administrador',
+        	err: error
+    	})
+
+	}
+
+};
+
+const updateUsuario = async (req, res = response) => {
+    const { id } = req.params; 
+    const { password } = req.body; 
+
+    try {
+        const salt = bcryptjs.genSaltSync();
+        const new_password =  bcryptjs.hashSync(password, salt);
+        const usuario = await User.findByPk(id);
+
+      
+        if (!usuario) {
+            return res.status(404).json({
+                ok: false,
+                msg: `No existe una persona con el id: ${id}`
+            });
+        }
+
+        if (password) {
+            usuario.password = new_password;
+        }
+
+       
+        await usuario.save();
+
+      
+        res.json({
+            ok: true,
+            data: usuario
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el Administrador',
+            err: error
+        });
+    }
+};
+
 module.exports = {
-    usuarioGet, obtenerPersona
+    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario
 }
