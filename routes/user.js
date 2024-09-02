@@ -4,7 +4,8 @@ const {
  obtenerPersona,
  usuarioPost,
  usuarioDelete,
- updateUsuario
+ updateUsuario, 
+ comprobarContraseña
 
 } = require('../controllers/usuario_controller');
 const router = Router();
@@ -14,4 +15,5 @@ router.get('/persona/:id', obtenerPersona);
 router.post('/', usuarioPost);
 router.delete('/:id', usuarioDelete);
 router.put('/:id', updateUsuario);
+router.post('/comprobar/', comprobarContraseña);
 module.exports = router;

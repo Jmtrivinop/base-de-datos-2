@@ -13,13 +13,9 @@ const usuarioGet = async (req, res = response) => {
     const query = req.query;
 
 
-    //Desestructuracion de argumentos
+   
     const { q, nombre = 'No name', apikey, page = 1, limit = 10 } = req.query;
 
-
-
-
-    //console.log("Datos",q,nombre);
     try {
         const unosUsuarios = await User.findAll();
         res.json({
@@ -88,17 +84,19 @@ const obtenerPersona = async (req = request, res = response) => {
 const usuarioPost = async (req, res = response) => {
     console.log(bcryptjs);
 	const {email, password, id_persona} = req.body;
-    const salt = bcryptjs.genSaltSync();
-    const new_password =  bcryptjs.hashSync(password, salt);
-
-    
+    const salt = 10
+        
+    const cleanedText = password.trim();   
+    const new_password = await bcryptjs.hash(cleanedText, salt);
+   
+    console.log(new_password)
 
 	try {
 
         const newUsuario = await User.create({
-            email,
+            email: email,
             password: new_password, 
-            id_persona
+            id_persona:id_persona
         });
 
 
@@ -107,7 +105,7 @@ const usuarioPost = async (req, res = response) => {
     	res.json({ok:true,
         	data:newUsuario
     	});
-
+       
 	} catch (error) {
     	console.log(error);
     	res.status(500).json({ok:false,
@@ -165,8 +163,10 @@ const updateUsuario = async (req, res = response) => {
     const { password } = req.body; 
 
     try {
-        const salt = bcryptjs.genSaltSync();
-        const new_password =  bcryptjs.hashSync(password, salt);
+        const salt = 10
+ 
+        const new_password = await bcryptjs.hash(password, salt);
+
         const usuario = await User.findByPk(id);
 
       
@@ -199,7 +199,54 @@ const updateUsuario = async (req, res = response) => {
         });
     }
 };
+const comprobarContraseña = async (req, res = response) => {
+    const { email,password } = req.body;
+     
+    try {
+        const exist_user = await User.findOne({ where: { email: email } });
+        
+        if (!exist_user){
+            return res.status(404).json({
+                ok: false,
+                msg: `No existe una persona con el email: ${email}`
+            });
+        }
+        else{
+            console.log(exist_user.password)
+            const salt = 10
+        
+      
+            const new_password = await bcryptjs.hash(password, salt);
+            const isMatch = await bcryptjs.compare(password, exist_user.password);
+            console.log(new_password)
+            if (isMatch){
+                res.json({
+                    ok: true,
+                    msg: "La contraseña coincide con la de la base de datos"
+                });
+            }
+            else{
+                return res.status(400).json({
+                    ok: false,
+                    msg: `Las contraseñas no coinciden`
 
+        
+                });
+            }
+        }
+        
+        
+    
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el Administrador',
+            err: error
+        });
+    }
+}
 module.exports = {
-    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario
+    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña
 }
