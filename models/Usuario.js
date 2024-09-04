@@ -25,7 +25,16 @@ const User = bdmysql.define('User', {
             model: Persona,
             key: 'id_persona' 
         }
-    }
+    },
+    rol: {
+            type: DataTypes.ENUM('ADMIN_ROLE', 'USER_ROLE'),
+            allowNull: false
+     
+     },
+    estado: {
+            type: DataTypes.BOOLEAN
+            
+        },
 }, {
     freezeTableName: true,
     timestamps: false

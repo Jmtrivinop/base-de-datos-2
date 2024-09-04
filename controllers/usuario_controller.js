@@ -1,6 +1,6 @@
 const {response, request} = require('express')
 const bcryptjs = require('bcryptjs');
-
+const { generarJWT } = require('../helpers/generar_jwt');
 const { Op } = require('sequelize');
 const { User } = require('../models/Usuario');
 const { Persona } = require('../models/Persona');
@@ -83,7 +83,7 @@ const obtenerPersona = async (req = request, res = response) => {
 
 const usuarioPost = async (req, res = response) => {
     console.log(bcryptjs);
-	const {email, password, id_persona} = req.body;
+	const {email, password, id_persona, rol, estado} = req.body;
     const salt = 10
         
     const cleanedText = password.trim();   
@@ -96,8 +96,10 @@ const usuarioPost = async (req, res = response) => {
         const newUsuario = await User.create({
             email: email,
             password: new_password, 
-            id_persona:id_persona
-        });
+            id_persona:id_persona,
+            rol: rol,
+            estado:estado
+                });
 
 
 
@@ -216,13 +218,15 @@ const comprobarContraseña = async (req, res = response) => {
             const salt = 10
         
       
-            const new_password = await bcryptjs.hash(password, salt);
+   
             const isMatch = await bcryptjs.compare(password, exist_user.password);
-            console.log(new_password)
+  
             if (isMatch){
+                const token = await generarJWT(exist_user.id_usuario);
                 res.json({
                     ok: true,
-                    msg: "La contraseña coincide con la de la base de datos"
+                    msg: "La contraseña coincide con la de la base de datos",
+                    token
                 });
             }
             else{
@@ -247,6 +251,7 @@ const comprobarContraseña = async (req, res = response) => {
         });
     }
 }
+
+
 module.exports = {
-    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña
-}
+    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña}
