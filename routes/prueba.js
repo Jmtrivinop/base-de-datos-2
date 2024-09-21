@@ -24,7 +24,7 @@ const router = Router();
 
 router.get('/', personasGet);
 
-router.get('/:id',personaByIdGet);
+router.get('/persona/:id',personaByIdGet);
 
 router.get('/como/:termino',personasComoGet)
 //router.post('/', usuariosPost);

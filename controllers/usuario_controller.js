@@ -220,9 +220,11 @@ const comprobarContraseña = async (req, res = response) => {
       
    
             const isMatch = await bcryptjs.compare(password, exist_user.password);
-  
+            
             if (isMatch){
+                console.log(exist_user.id_usuario)
                 const token = await generarJWT(exist_user.id_usuario);
+                console.log(token)
                 res.json({
                     ok: true,
                     msg: "La contraseña coincide con la de la base de datos",

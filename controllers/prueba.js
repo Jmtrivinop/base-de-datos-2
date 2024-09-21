@@ -231,13 +231,11 @@ const PersonasDelete = async (req, res = response) => {
 
 const updatePersona = async (req, res = response) => {
     const { id } = req.params; 
-    const { nombre } = req.body; 
+    const { nombre, apellido, fecha_nacimiento, tipo_documento, 'Numero Documento': numero_documento } = req.body; 
 
     try {
-      
         const persona = await Persona.findByPk(id);
 
-      
         if (!persona) {
             return res.status(404).json({
                 ok: false,
@@ -245,19 +243,19 @@ const updatePersona = async (req, res = response) => {
             });
         }
 
-        if (nombre) {
-            persona.nombre = nombre;
-        }
+        
+        if (nombre) persona.nombre = nombre;
+        if (apellido) persona.apellido = apellido;
+        if (fecha_nacimiento) persona.fecha_nacimiento = fecha_nacimiento;
+        if (tipo_documento) persona.Tipo_documento = tipo_documento;
+        if (numero_documento) persona['Numero Documento'] = numero_documento;
 
-       
         await persona.save();
 
-      
         res.json({
             ok: true,
             data: persona
         });
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -267,6 +265,7 @@ const updatePersona = async (req, res = response) => {
         });
     }
 };
+
 
 module.exports = {
     personasGet, personaByIdGet, personasComoGet, personasByTipoDocumentoGet, personasByInitialGet,
