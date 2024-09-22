@@ -8,14 +8,16 @@ const {
  usuarioDelete,
  updateUsuario, 
  comprobarContraseña,
+ usuarioByIdGet
 
 } = require('../controllers/usuario_controller');
 const router = Router();
 
-router.get('/', validarJWT,usuarioGet);
-router.get('/persona/:id', validarJWT,obtenerPersona);
+router.get('/',usuarioGet);
+router.get('/:id',usuarioByIdGet);
+router.get('/persona/:id',obtenerPersona);
 router.post('/',usuarioPost);
-router.delete('/:id',validarJWT, usuarioDelete);
-router.put('/:id', validarJWT,updateUsuario);
+router.delete('/:id', usuarioDelete);
+router.put('/:id',updateUsuario);
 router.post('/comprobar/', comprobarContraseña);
 module.exports = router;

@@ -44,6 +44,33 @@ const usuarioGet = async (req, res = response) => {
 
 
 };
+
+const usuarioByIdGet = async( req = request, res = response) => {
+    const {id} = req.params;
+
+    try {
+        const unUsuairo = await User.findByPk(id);
+        if (!unUsuairo) {
+            return res.status(404).json({ok:false,
+                msg: 'No existe un usuario con el id: ' + id
+            })
+        }
+
+
+        res.json({
+            ok:true,
+            data:unUsuairo});
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ok:false,
+            msg: 'Hable con el Administrador',
+            err: error
+        })
+
+    }
+};
+
 const obtenerPersona = async (req = request, res = response) => {
     const { id } = req.params;
 
@@ -159,19 +186,14 @@ const usuarioDelete = async (req, res = response) => {
 	}
 
 };
-
 const updateUsuario = async (req, res = response) => {
-    const { id } = req.params; 
-    const { password } = req.body; 
+    const { id } = req.params;
+    const { password, email, id_persona, rol, estado } = req.body; 
 
     try {
-        const salt = 10
- 
-        const new_password = await bcryptjs.hash(password, salt);
-
         const usuario = await User.findByPk(id);
 
-      
+       
         if (!usuario) {
             return res.status(404).json({
                 ok: false,
@@ -180,13 +202,29 @@ const updateUsuario = async (req, res = response) => {
         }
 
         if (password) {
+            const salt = 10;
+            const new_password = await bcryptjs.hash(password, salt);
             usuario.password = new_password;
         }
 
-       
-        await usuario.save();
+
+        if (email) {
+            usuario.email = email;
+        }
+        if (id_persona) {
+            usuario.id_persona = id_persona;
+        }
+        if (rol) {
+            usuario.rol = rol;
+        }
+        if (estado !== undefined) { 
+            usuario.estado = estado;
+        }
 
       
+        await usuario.save();
+
+
         res.json({
             ok: true,
             data: usuario
@@ -201,6 +239,7 @@ const updateUsuario = async (req, res = response) => {
         });
     }
 };
+
 const comprobarContraseña = async (req, res = response) => {
     const { email,password } = req.body;
      
@@ -256,4 +295,4 @@ const comprobarContraseña = async (req, res = response) => {
 
 
 module.exports = {
-    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña}
+    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña, usuarioByIdGet}
