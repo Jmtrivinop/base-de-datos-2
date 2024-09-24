@@ -156,7 +156,7 @@ const updateCiudad = async (req, res = response) => {
 
         
         if (nombre) ciudad.nombre = nombre;
-        if (pais) ciudad.apellido = pais;
+        if (pais) ciudad.pais = pais;
        
 
         await ciudad.save();

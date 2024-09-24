@@ -240,7 +240,7 @@ const updateUsuario = async (req, res = response) => {
     }
 };
 
-const comprobarContraseña = async (req, res = response) => {
+const login = async (req, res = response) => {
     const { email,password } = req.body;
      
     try {
@@ -295,4 +295,4 @@ const comprobarContraseña = async (req, res = response) => {
 
 
 module.exports = {
-    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, comprobarContraseña, usuarioByIdGet}
+    usuarioGet, obtenerPersona, usuarioPost, usuarioDelete, updateUsuario, login, usuarioByIdGet}
