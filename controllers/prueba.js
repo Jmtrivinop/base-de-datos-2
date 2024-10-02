@@ -231,7 +231,7 @@ const PersonasDelete = async (req, res = response) => {
 
 const updatePersona = async (req, res = response) => {
     const { id } = req.params; 
-    const { nombre, apellido, fecha_nacimiento, tipo_documento, 'Numero Documento': numero_documento } = req.body; 
+    const { nombre, apellido, fecha_nacimiento, Tipo_documento, 'Numero Documento': numero_documento } = req.body; 
 
     try {
         const persona = await Persona.findByPk(id);
@@ -247,7 +247,7 @@ const updatePersona = async (req, res = response) => {
         if (nombre) persona.nombre = nombre;
         if (apellido) persona.apellido = apellido;
         if (fecha_nacimiento) persona.fecha_nacimiento = fecha_nacimiento;
-        if (tipo_documento) persona.Tipo_documento = tipo_documento;
+        if (Tipo_documento) persona.Tipo_documento = Tipo_documento;
         if (numero_documento) persona['Numero Documento'] = numero_documento;
 
         await persona.save();

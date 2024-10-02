@@ -16,7 +16,7 @@ const router = Router();
 router.get('/',usuarioGet);
 router.get('/:id',usuarioByIdGet);
 router.get('/persona/:id',obtenerPersona);
-router.post('/',usuarioPost);
+router.post('/',validarJWT,usuarioPost);
 router.delete('/:id',validarJWT, usuarioDelete);
 router.put('/:id',validarJWT,updateUsuario);
 router.post('/login/', login);
