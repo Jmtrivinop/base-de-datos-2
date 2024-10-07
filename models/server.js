@@ -5,7 +5,7 @@ const cors = require('cors')
 
 
 const { bdmysql } = require('../database/MariadbConnection');
-
+const { dbMongo } = require('../database/MongoDbConnection');
 
 class Server {
     constructor() {
@@ -35,7 +35,7 @@ class Server {
         //Aqui me conecto a la BD
         this.dbConnection();
 
-
+        this.dbConnectionMongo();
         //Middlewares
         this.middlewares();
 
@@ -56,6 +56,9 @@ class Server {
         } catch (error) {
             console.error('No se pudo Conectar a la BD MySQL', error);
         }
+    }
+    async dbConnectionMongo() {
+        await dbMongo();
     }
 
 
