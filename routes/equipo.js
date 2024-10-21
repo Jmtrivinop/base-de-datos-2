@@ -4,7 +4,10 @@ const {validarCampos} = require('../middlewares/validar-campos')
 const {existeEquipoPorId} = require('../helpers/db-validators')
 const {
     obtenerEquiposGet,
-    obtenerEquipoGet
+    obtenerEquipoGet,
+    crearEquipoPost, 
+    actualizarEquipoPut, 
+    borrarEquipoDelete
 } = require('../controllers/equipo');
 
 const router = Router();
@@ -15,5 +18,7 @@ router.get('/:id',[
     check('id').custom( existeEquipoPorId ),
     validarCampos,
 ], obtenerEquipoGet );
-
+router.post('/',crearEquipoPost)
+router.put('/:id',actualizarEquipoPut)
+router.delete('/:id',borrarEquipoDelete)
 module.exports = router

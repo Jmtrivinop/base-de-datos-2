@@ -36,8 +36,140 @@ const obtenerEquipoGet = async (req, res = response) => {
     }
   };
   
+  const crearEquipoPost = async (req, res = response) => {
+
+
+    const body = req.body;
+   
+    try {
+  
+  
+      const equipoDB = await Equipo.findOne({ nombre_equipo: body.nombre_equipo });
+  
+  
+      if (equipoDB) {
+        return res
+        //.status(400)
+        .json({
+          Ok: false,
+          msg: `El Equipo ${body.nombre_equipo}, ya existe`,
+        });
+      }
+  
+  
+   
+      const equipo = new Equipo(body);
+  
+  
+      // Guardar DB
+      await equipo.save();
+  
+  
+  
+  
+      res
+      //.status(201)
+      .json({ Ok: true, msg: 'Equipo Insertado', resp: equipo});
+    } catch (error) {
+      //console.log("ERROR:INSERTAR",error);
+  
+  
+      res.json({ Ok: false, msg:'Error al Insertar Heroe', resp: error });
+    }
+  };
+  const actualizarEquipoPut = async (req, res = response) => {
+    const { id } = req.params;
+  
+  
+    const data  = req.body;
+  
+  
+    try {
+  
+  
+     
+      if (data.nombre_equipo) {
+          const equipoDB = await Equipo.findOne({ nombre_equipo: data.nombre_equipo });
+  
+  
+          if (equipoDB) {
+            return res.status(400).json({
+              msg: `El Equipo ${data.nombre_equipo}, ya existe en la BD`,
+            });
+          }
+      }
+     
+     
+      const equipo = await Equipo.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+  
+  
+      res.json({ Ok: true, msg: 'Equipo Actualizado', resp: equipo });
+    } catch (error) {
+      console.log("ERROR_MODIFICAR",error);
+      res.json({ Ok: false, resp: error });
+    }
+  };
+  const borrarEquipoDelete = async (req, res = response) => {
+    const { id } = req.params;
+    try {
+  
+  
+      const equipo = await Equipo.findById(id);
+  
+  
+      if (!equipo){
+        return res.status(400).json({
+          msg: `El Equipo con ${id}, no existe en la BD`,
+        });
+  
+  
+      }
+  
+  
+      /*
+      const [total, multimediaheroe] = await Promise.all([
+        MultimediaHeroe.countDocuments({ IdHeroe: id }),
+        MultimediaHeroe.find({ IdHeroe: id})
+          //.limit(Number(limite)),
+      ]);
+  
+  
+      if (total > 0){
+        return res
+        //.status(400)
+        .json({
+          Ok: false,
+          msg: `El Heroe tiene (${total}) multimedias asignadas y no puede ser borrado....`,
+        });
+      }
+      else{
+        const heroeBorrado = await Heroe.findByIdAndDelete(id);
+  
+  
+        res.json({ Ok: true, resp: heroeBorrado });
+  
+  
+      }
+      */
+  
+  
+      const equipoBorrado = await Equipo.findByIdAndDelete(id);
+  
+  
+      res.json({ Ok: true, resp: equipoBorrado });
+  
+  
+    } catch (error) {
+      console.log("ERROR_BORRADO",error);
+      res.json({ Ok: false, resp: error });
+    }
+  };
+  
+  
 module.exports = {
-    obtenerEquiposGet, obtenerEquipoGet
+    obtenerEquiposGet, obtenerEquipoGet, crearEquipoPost, actualizarEquipoPut, borrarEquipoDelete
 };
 
 
