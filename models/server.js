@@ -24,6 +24,7 @@ class Server {
         this.pathsMongo = {
             equipo: '/api/equipo',
             futbolistas: '/api/futbolistas',
+            contrato: '/api/contrato'
         }
 
 
@@ -75,6 +76,7 @@ class Server {
         this.app.use(this.pathsMySql.ciudad, require('../routes/ciudad'));
         this.app.use(this.pathsMongo.equipo, require('../routes/equipo'));
         this.app.use(this.pathsMongo.futbolistas, require('../routes/futbolista'));
+        this.app.use(this.pathsMongo.contrato, require('../routes/contrato'));
 
 
 

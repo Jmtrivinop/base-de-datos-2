@@ -4,6 +4,7 @@ const {User} = require('./Usuario');
 const {Persona} = require('./Persona');
 const Equipo = require('./Equipos');
 const Futbolista = require('./Futbolista')
+const Contrato = require('./contrato')
 
 
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
     Persona,  
 
     Equipo,
-    Futbolista
+    Futbolista,
+    Contrato
 }

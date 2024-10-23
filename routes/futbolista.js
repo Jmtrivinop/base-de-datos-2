@@ -6,7 +6,9 @@ const { check } = require('express-validator');
 const {validarCampos} = require('../middlewares/validar-campos')
 
 const { obtenerFutbolistas,
-        crearFutbolistasPost
+        crearFutbolistasPost,
+        actualizarFutbolistaPut,
+        borrarFutbolistaDelete
  } = require('../controllers/futbolistas');
 
 
@@ -17,4 +19,6 @@ const router = Router();
 
 router.get('/', obtenerFutbolistas );
 router.post('/', crearFutbolistasPost );
+router.put('/:id', actualizarFutbolistaPut );
+router.delete('/:id', borrarFutbolistaDelete );
 module.exports = router;
